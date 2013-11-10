@@ -9,6 +9,7 @@ Team Members:
 3. Kumar Sadhu
 4. Sindhu Suryanarayana
 
+
 Geospatial queries (GQ) have been used in a wide variety of applications such as decision support systems,
 profile-based marketing, bioinformatics and GIS. Most of the existing query-answering approaches assume
 centralized processing on a single machine although GQs are intrinsically parallelizable. There are some
