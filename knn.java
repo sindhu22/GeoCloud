@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 /*
-* Author: Abhijeet Nayak (abhijeet.nayak@ufl.edu)
+* Author: Abhijeet,Dhananjay,Kumar,Sindhu
 */
 
 public class knn {
