@@ -44,7 +44,6 @@ public class Point implements Cloneable, Comparator
 
         return new Long(p1.GetX()).compareTo(p2.GetX());
     }
-
 }
 
 
