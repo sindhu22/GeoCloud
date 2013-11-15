@@ -1,7 +1,8 @@
 package com.geocloud.point;
 
+import java.util.*;
 
-public class Point implements Cloneable
+public class Point implements Cloneable, Comparator
 {
     private long x = 0, y = 0;
 
@@ -32,6 +33,18 @@ public class Point implements Cloneable
     public long GetDistFast(Point p){
         return ( ((p.GetX()-x) * (p.GetX()-x)) + ( (p.GetY()-y) * (p.GetY()-y) ) );
     }
+
+    public int compare(Object o1, Object o2){
+        Point p1 = (Point)o1;
+        Point p2 = (Point)o2;
+
+        if(p1.GetX() == p2.GetX()){
+            return new Long(p1.GetY()).compareTo(p2.GetY());
+        }
+
+        return new Long(p1.GetX()).compareTo(p2.GetX());
+    }
+
 }
 
 
