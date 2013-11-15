@@ -3,17 +3,17 @@ package com.geocloud.point;
 
 public class Point implements Cloneable
 {
-    private int x = 0, y = 0;
+    private long x = 0, y = 0;
 
-    public Point(int X, int Y){ 
+    public Point(long X, long Y){ 
         x = X; y = Y; 
     }
 
-    public int GetX() {
+    public long GetX() {
         return x;
     }
 
-    public int GetY() {
+    public long GetY() {
         return y;
     }
 
@@ -27,6 +27,10 @@ public class Point implements Cloneable
 
     public double GetDist(Point p){
         return Math.sqrt( ((p.GetX()-x) * (p.GetX()-x)) + ( (p.GetY()-y) * (p.GetY()-y) ) );
+    }
+
+    public long GetDistFast(Point p){
+        return ( ((p.GetX()-x) * (p.GetX()-x)) + ( (p.GetY()-y) * (p.GetY()-y) ) );
     }
 }
 
