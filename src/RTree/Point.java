@@ -1,5 +1,6 @@
 package com.geocloud.point;
 
+
 public class Point implements Cloneable
 {
     private int x = 0, y = 0;
@@ -22,6 +23,10 @@ public class Point implements Cloneable
 
     public String toString() {
         return new String("x = " + x + " y = " + y + "\n");
+    }
+
+    public double GetDist(Point p){
+        return Math.sqrt( ((p.GetX()-x) * (p.GetX()-x)) + ( (p.GetY()-y) * (p.GetY()-y) ) );
     }
 }
 
