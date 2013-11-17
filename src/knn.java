@@ -51,17 +51,14 @@ public class knn {
 					nearest5nextDayVars.add(oldTempArr[l + baseYearSamples]);
 					nearest5Matches.add(tempArr);
 
-				} else if (size < 5) {
+				} else if (size <= 5) {
 					nearest5sums.add(tempSum);
 					nearest5nextDayVars.add(oldTempArr[l + baseYearSamples]);
 					nearest5Matches.add(tempArr);
 
 					int p = nearest5sums.size();
 
-					while (p > 1
-							&& nearest5sums.get(p - 1) < nearest5sums
-									.get(p - 2)) {
-
+					while (p > 1 && nearest5sums.get(p - 1) < nearest5sums.get(p - 2)) {
 						float temp_var = nearest5sums.get(p - 1);
 						float temp_var1 = nearest5nextDayVars.get(p - 1);
 						ArrayList<Float> temp_var2 = nearest5Matches.get(p - 1);
@@ -75,17 +72,14 @@ public class knn {
 						p--;
 					}
 				} else {
-					if (tempSum < nearest5sums.get(size - 1)) {
+					if (tempSum <= nearest5sums.get(size - 1)) {
 						nearest5sums.set(size - 1, tempSum);
 						nearest5nextDayVars.set(size - 1, oldTempArr[l
 								+ baseYearSamples]);
 						nearest5Matches.set(size - 1, tempArr);
 
 						int p = nearest5sums.size();
-						while (p > 1
-								&& nearest5sums.get(p - 1) < nearest5sums
-										.get(p - 2)) {
-
+						while (p > 1 && nearest5sums.get(p - 1) < nearest5sums.get(p - 2)) {
 							float temp_var = nearest5sums.get(p - 1);
 							float temp_var1 = nearest5nextDayVars.get(p - 1);
 							ArrayList<Float> temp_var2 = nearest5Matches
