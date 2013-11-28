@@ -11,7 +11,7 @@
 		//Global graphics variable to draw lines and points
 		var gr;	
 
-		//variable to store the file content from the server
+		//Variable to store the file content from the server
 		var data;
 
 		//Utitlity function to plot points
@@ -33,7 +33,7 @@
 	        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
 	      }
 
-	      xmlhttp.open("GET","file.txt",false);
+	      xmlhttp.open("POST","file.txt",false);
 	      xmlhttp.send();
 
 	      //Data received from the server
@@ -56,23 +56,41 @@
 		    //var points = new Array(new jsPoint(28,35),new jsPoint(52,16),new jsPoint(177,38),new jsPoint(149,85),new jsPoint(57,92));
 		    var points = new Array();
 
-		    var array = data.split(" ");
+		    //Replace all the newline with space and split the lines in spaces
+		    var array = data.replace( /\n/g, " " ).split( " " )
+
 
 		    //Release the memory allocated to data variable
-		    //delete data;
+		    delete data;
 
+		    
 		    //Process each word in the string
 	    	while (array.length > 0) {
+	    	//var count=0;
+	    	
+	    	//while (count < array.length){
+
+	    	//tempp = temp.concat(array[0]);
+	    	//tempp = temp.concat(array[1]);
 
         	//add the first two points from the string to the points array
-        	points.push( new jsPoint(parseFloat(array[0]),parseFloat(array[1])) );
-        
+        	var x = array[0];
+        	var y = array[1];
+
+        	points.push( new jsPoint(parseFloat(x),parseFloat(y)) );
+        	
+        	//alert(x);
+        	//alert(y);
        		var position = array.indexOf(array[0]);
 
         	//Remove two element from the array
         	if (~position)
           		array.splice(position,2);
+
       		}
+      		//alert(array.length);
+
+      		//document.getElementById("myDiv").innerHTML=tempp;
 
 		    //Create jsColor object
 		    var colGreen = new jsColor("green");
