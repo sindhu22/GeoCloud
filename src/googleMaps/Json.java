@@ -1,10 +1,12 @@
 import org.apache.poi.*;
 import org.apache.poi.hssf.usermodel.*;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+
 import org.json.*;
 
 import java.io.FileInputStream;
@@ -37,7 +39,6 @@ public class Json
         // and set the cell value with an instance of HSSFRichTextString
         // containing the words FIRST SHEET.
         //
-        
         HSSFRow rowA = firstSheet.createRow(0);
         HSSFCell cellA = rowA.createCell(0);
         cellA.setCellValue(new HSSFRichTextString("FIRST SHEET"));
@@ -75,6 +76,42 @@ public class Json
                 }
             }
         }
- 
+
+        FileInputStream inp = new FileInputStream( "sheet.xls" );
+        Workbook work = WorkbookFactory.create( inp );
+
+        // Get the first Sheet.
+        Sheet sheet = work.getSheetAt( 0 );
+
+        // Start constructing JSON.
+        JSONObject json = new JSONObject();
+
+        // Iterate through the rows.
+        JSONArray rows = new JSONArray();
+        for ( Iterator<Row> rowsIT = sheet.rowIterator(); rowsIT.hasNext(); )
+        {
+            Row row = rowsIT.next();
+            JSONObject jRow = new JSONObject();
+
+            // Iterate through the cells.
+            JSONArray cells = new JSONArray();
+            for ( Iterator<Cell> cellsIT = row.cellIterator(); cellsIT.hasNext(); )
+            {
+                Cell cell = cellsIT.next();
+                cells.put( cell.getStringCellValue() );
+            }
+
+            jRow.put( "cell", cells );
+            rows.put( jRow );
+        }
+
+    // Create the JSON.
+    json.put( "rows", rows );
+
+    // Get the JSON text.
+    // System.out.println(json.toString());
+    return json.toString();
+
+
     }
 }
