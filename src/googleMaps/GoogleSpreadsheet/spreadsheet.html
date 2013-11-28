@@ -303,14 +303,17 @@ function cm_loadMapJSON(json)
       cm_mapHTMLS.push(html);
       bounds.extend(point);
     
-      if(param_useSidebar == true) {
+      if(param_useSidebar == true)
+      {
         var markerA = document.createElement("a");
         markerA.setAttribute("href","javascript:cm_markerClicked('" + i +"')");
         markerA.style.color = "#000000";
         var sidebarText= "";
-        if(usingRank) {
+        if(usingRank)
+        {
           sidebarText += rank + ") ";
         } 
+        
         sidebarText += label;
         markerA.appendChild(document.createTextNode(sidebarText));
         sidebarDIV.appendChild(markerA);
