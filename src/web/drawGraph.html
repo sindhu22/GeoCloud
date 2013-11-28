@@ -1,0 +1,40 @@
+<html>
+<head>
+	<script type="text/JavaScript" src="jsDraw2D.js"></script>
+</head>
+<body>
+	<div id="canvas" style="overflow:hidden;position:relative;width:600px;height:300px;"></div> 
+
+	<script type="text/JavaScript">
+	    //Create jsGraphics object
+	    var gr = new jsGraphics(document.getElementById("canvas"));
+	    
+	    //Draw the coordinates
+		gr.showGrid(20);
+
+		//poionts in the graph
+	    var points = new Array(new jsPoint(28,35),new jsPoint(52,16),new jsPoint(177,38),new jsPoint(149,85),new jsPoint(57,92));
+
+	    //Create jsColor object
+	    var colGreen = new jsColor("green");
+
+	    //Create jsPen object
+	    var pen = new jsPen(colGreen,1);
+
+	    //Plot the points
+	    plotPoint(points);
+	    
+	    //draw the curve using the k points
+	    //gr.drawCurve(pen,points);
+		gr.drawClosedCurve(pen,points);
+
+
+	    //Utitlity function to plot points
+	    function plotPoint(points){
+	    	for(i in points){
+	    		gr.fillRectangle(new jsColor("green"),new jsPoint(points[i].x-2,points[i].y+2),4,4);
+	    	}
+	    }
+	</script>
+</body>
+</html>
