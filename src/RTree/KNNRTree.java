@@ -20,9 +20,15 @@ import gnu.trove.*;
 
 public class KNNRTree {
 
-	public static ArrayList<Integer> kNNPoints;
+    public static ArrayList<Integer> kNNPoints;
 
     private static class NullProc implements TIntProcedure {
+        public boolean execute(int n){
+            return true;
+        }
+    }
+
+    private static class EmitProc implements TIntProcedure {
         public boolean execute(int n){
             kNNPoints.add(n);
             return true;
@@ -33,12 +39,12 @@ public class KNNRTree {
         public void map(LongWritable key, Text value, Context context) 
             throws IOException, InterruptedException {
 
-	    Configuration conf = context.getConfiguration();
+            Configuration conf = context.getConfiguration();
             Integer givenK = Integer.parseInt(conf.get("k"));
             Float  givenX = Float.parseFloat(conf.get("x"));
             Float  givenY = Float.parseFloat(conf.get("y"));
-	    System.out.println("Emitting point: " + (givenX.toString() + " " + givenY.toString()) + " " + value.toString());
-	    context.write(new Text(givenX.toString() + " " + givenY.toString()), value);
+            System.out.println("Emitting point: " + (givenX.toString() + " " + givenY.toString()) + " " + value.toString());
+            context.write(new Text(givenX.toString() + " " + givenY.toString()), value);
         }
     }
 
@@ -46,40 +52,40 @@ public class KNNRTree {
         private float x;
         private float y;
 
-	private static ArrayList<Point> ListOfPoints;
-	private static Integer pointID;
+        private static ArrayList<Point> ListOfPoints;
+        private static Integer pointID;
 
         public void reduce(Text key, Iterable<Text> values, Context context) 
             throws IOException, InterruptedException {
-		
+
 
             Configuration conf = context.getConfiguration();
             Integer givenK = Integer.parseInt(conf.get("k"));
             Float  givenX = Float.parseFloat(conf.get("x"));
             Float  givenY = Float.parseFloat(conf.get("y"));
 
-	    SpatialIndex gKNNRTree = new RTree();
-	    gKNNRTree.init(null);
+            SpatialIndex gKNNRTree = new RTree();
+            gKNNRTree.init(null);
 
-	    ListOfPoints = new ArrayList<Point>();
-	    kNNPoints = new ArrayList<Integer>();
-	    pointID = new Integer(0);
+            ListOfPoints = new ArrayList<Point>();
+            kNNPoints = new ArrayList<Integer>();
+            pointID = new Integer(0);
 
-	    for(Text value : values){
-		    String line = value.toString();
-		    StringTokenizer tokenizer = new StringTokenizer(line);
-		    x = Float.parseFloat(tokenizer.nextToken());
-		    y = Float.parseFloat(tokenizer.nextToken());
-		    ListOfPoints.add(new Point(x,y));
-		    if(gKNNRTree.equals(null)){
-			    System.out.println("Rtree not initialized");
-		    }
-		    else {
-			    gKNNRTree.add(new Rectangle(x,y,x,y), pointID++);
-		    }
-	    }
+            for(Text value : values){
+                String line = value.toString();
+                StringTokenizer tokenizer = new StringTokenizer(line);
+                x = Float.parseFloat(tokenizer.nextToken());
+                y = Float.parseFloat(tokenizer.nextToken());
+                ListOfPoints.add(new Point(x,y));
+                if(gKNNRTree.equals(null)){
+                    System.out.println("Rtree not initialized");
+                }
+                else {
+                    gKNNRTree.add(new Rectangle(x,y,x,y), pointID++);
+                }
+            }
 
-            TIntProcedure proc = new NullProc();
+            TIntProcedure proc = new EmitProc();
             gKNNRTree.nearestN(new Point(givenX, givenY), proc, givenK, Float.MAX_VALUE);
 
             for(int i : kNNPoints){
@@ -116,7 +122,7 @@ public class KNNRTree {
 
         FileInputFormat.addInputPath(job, new Path(args[3]));
         FileOutputFormat.setOutputPath(job, new Path(args[4]));
-	
+
         job.waitForCompletion(true);
 
 
