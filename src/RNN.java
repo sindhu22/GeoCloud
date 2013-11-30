@@ -1,4 +1,3 @@
-package rnn;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,95 +16,92 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 public class RNN {
 
-    public static class Map extends Mapper <LongWritable, Text, Text, IntWritable> {
-        private final static IntWritable one = new IntWritable(1);
-        private double x;
-        private double y;
-        private final static ArrayList<Distance> ListOfDist = new ArrayList<Distance>();
+	public static class RNNMap extends Mapper <LongWritable, Text, Text, Text> {
+		private double x;
+		private double y;
+		private final static ArrayList<Point>    ListOfPoints = new ArrayList<Point>();
 
-        public void map(LongWritable key, Text value, Context context) 
-            throws IOException, InterruptedException {
+		public void map(LongWritable key, Text value, Context context) 
+			throws IOException, InterruptedException {
 
-                // Get values of K , X and Y
-                Configuration conf = context.getConfiguration();
-                Integer givenK = Integer.parseInt(conf.get("k"));
-                Double  givenX = (double)Float.parseFloat(conf.get("x"));
-                Double  givenY = (double)Float.parseFloat(conf.get("y"));
+				// Get values of X and Y
+				Configuration conf = context.getConfiguration();
+				Double  givenX = Double.parseDouble(conf.get("x"));
+				Double  givenY = Double.parseDouble(conf.get("y"));
 
-                // read input points
-                String line = value.toString();
-                StringTokenizer tokenizer = new StringTokenizer(line);
-                while(tokenizer.hasMoreTokens()){
-                    x = Double.parseDouble(tokenizer.nextToken());
-                    y = Double.parseDouble(tokenizer.nextToken());
-                    Point p1 = new Point(x,y);
-                    Point p2 = new Point(givenX, givenY);
-                    ListOfDist.add(new Distance(p1, p2));
-                }
+				System.out.println("Emitting: " + value.toString());
+				context.write(new Text(new Point(givenX, givenY).toString()), value);
 
-                Collections.sort(ListOfDist);
-                Iterator<Distance> dI = ListOfDist.iterator();
+				// read input points
+			}
+	}
 
-                for(int numPts = 0; (numPts < givenK) && (dI.hasNext()); numPts++){
-                    // emit the point
-                    Distance d = dI.next();
-                    Point p = d.GetLeft();
-                    // emit code here
-                }
-            }
-    }
+	public static class RNNReduce extends Reducer <Text, Text, Text, Text> {
+		private double x;
+		private double y;
+		ArrayList<Point>	ListOfPoints = new ArrayList<Point>();
 
-    public static class Reduce extends Reducer <Text, IntWritable, Text, IntWritable> {
-        ArrayList <Distance> ListOfDist = new ArrayList<Distance>();
+		public void reduce(Text key, Iterable<Text> values, Context context) 
+			throws IOException, InterruptedException {
 
-        public void reduce(Text key, Iterable<IntWritable> values, Context context) 
-            throws IOException, InterruptedException {
-                Configuration conf = context.getConfiguration();
-                Integer givenK = Integer.parseInt(conf.get("k"));
-                Double  givenX = (double)Float.parseFloat(conf.get("x"));
-                Double  givenY = (double)Float.parseFloat(conf.get("y"));
+				Configuration conf = context.getConfiguration();
+				Double  givenX = Double.parseDouble(conf.get("x"));
+				Double  givenY = Double.parseDouble(conf.get("y"));
+				Point GivenPoint = new Point(givenX, givenY);
 
-                // read k mapped points
-                while(values.hasNext()){
-                    ListOfDist.add(new Distance(values.next(), new Point(givenX, givenY)));
-                }
+				for(Text value : values){
+					String line = value.toString();
+					StringTokenizer tokenizer = new StringTokenizer(line);
+					x = Double.parseDouble(tokenizer.nextToken());
+					y = Double.parseDouble(tokenizer.nextToken());
+					ListOfPoints.add(new Point(x,y));
+				}
 
-                Collections.sort(ListOfDist);
 
-                Iterator<Distance> dI = ListOfDist.iterator();
+				for(Point p1 : ListOfPoints){
+					ArrayList<Distance> ListOfDist = new ArrayList<Distance>();
+					for(Point p2 : ListOfPoints) {
+						if(p1 != p2){
+							// find nearest neighbor
+							ListOfDist.add(new Distance(p1, p2));
+						}
+					}
+					Collections.sort(ListOfDist);
+					Point NN = ListOfDist.get(0).GetRight();
+					if(NN.toString().equals(GivenPoint.toString())){
+						// emit the point
+						context.write(new Text(p1.toString()), new Text(GivenPoint.toString()));
+					}
+				}
+			}
+	}
 
-                for(int numPts = 0; (numPts < givenK) && (dI.hasNext()); numPts++){
-                    // emit the point
-                    Distance d = dI.next();
-                    Point p = d.GetLeft();
-                    // emit code here
-                }
-            }
-    }
+	public static void main(String[] args) 
+		throws Exception {
+			Configuration conf = new Configuration();
 
-    public static void main(String[] args) 
-        throws Exception {
-            Configuration conf = new Configuration();
+			conf.set("x", (args[0]));
+			conf.set("y", (args[1]));
 
-            conf.setInt("k", Integer.parseInt(args[0]));
-            conf.setFloat("x", Float.parseFloat(args[1]));
-            conf.setFloat("y", Float.parseFloat(args[2]));
+			Job job = new Job(conf, "rnn");
 
-            Job job = new Job(conf, "rnn");
+			job.setJarByClass(RNN.class);
 
-            job.setOutputKeyClass(Text.class);
-            job.setOutputValueClass(IntWritable.class);
+			job.setOutputKeyClass(Text.class);
+			job.setOutputValueClass(Text.class);
 
-            job.setMapperClass(Map.class);
-            job.setReducerClass(Reducer.class);
+			job.setMapperClass(RNNMap.class);
+			//job.setCombinerClass(RNNReduce.class);
+			job.setReducerClass(RNNReduce.class);
 
-            job.setInputFormatClass(TextInputFormat.class);
-            job.setOutputFormatClass(TextOutputFormat.class);
+			job.setInputFormatClass(TextInputFormat.class);
+			job.setOutputFormatClass(TextOutputFormat.class);
 
-            FileInputFormat.addInputPath(job, new Path(args[3]));
-            FileOutputFormat.setOutputPath(job, new Path(args[4]));
 
-            job.waitForCompletion(true);
-        }
+			FileInputFormat.addInputPath(job, new Path(args[2]));
+			FileOutputFormat.setOutputPath(job, new Path(args[3]));
+
+			job.waitForCompletion(true);
+		}
 }
 

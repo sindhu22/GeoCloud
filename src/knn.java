@@ -1,116 +1,109 @@
+
 import java.util.ArrayList;
+import java.util.Collections;
+import java.io.IOException;
 import java.util.StringTokenizer;
-//Authors Abhijeet,Dhananjay,Kumar,Sindhu
 
-public class knn {
+import java.util.*;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.conf.*;
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.mapreduce.*;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
-	public static float calc5nearNeighbours(String base, ArrayList<String> old,
-			ArrayList<Float> oldAvgs, ArrayList<ArrayList<Float>> nearest5Matches) {
+public class KNN {
 
-		Float baseTempVarSum = 0f;
-		ArrayList<Float> nearest5sums = new ArrayList<Float>();
-		ArrayList<Float> nearest5nextDayVars = new ArrayList<Float>();
-		
-		StringTokenizer baseVals = new StringTokenizer(base);
-		int baseYearSamples = baseVals.countTokens();
-		while (baseVals.hasMoreElements()) {
-			baseTempVarSum += Float.parseFloat(baseVals.nextToken());
+    public static class KNNMap extends Mapper <LongWritable, Text, Text, Text> {
+        private double x;
+        private double y;
+
+        public void map(LongWritable key, Text value, Context context) 
+            throws IOException, InterruptedException {
+         ArrayList<Distance> ListOfDist = new ArrayList<Distance>();
+
+                // Get values of K , X and Y
+                Configuration conf = context.getConfiguration();
+                Integer givenK = Integer.parseInt(conf.get("k"));
+                Double  givenX = (double)Float.parseFloat(conf.get("x"));
+                Double  givenY = (double)Float.parseFloat(conf.get("y"));
+
+                // read input points
+		    System.out.println("Emitting: " + value.toString());
+		    context.write(new Text(new Point(givenX, givenY).toString()), value);
+            }
+    }
+
+    public static class KNNReduce extends Reducer <Text, Text, Text, Text> {
+	private double x;
+	private double y;
+	ArrayList <Distance> ListOfDist = new ArrayList<Distance>();
+
+        public void reduce(Text key, Iterable<Text> values, Context context) 
+            throws IOException, InterruptedException {
+
+                Configuration conf = context.getConfiguration();
+                Integer givenK = Integer.parseInt(conf.get("k"));
+                Double  givenX = (double)Float.parseFloat(conf.get("x"));
+                Double  givenY = (double)Float.parseFloat(conf.get("y"));
+
+                // read k mapped points
+		for(Text value : values){
+			String line = value.toString();
+			StringTokenizer tokenizer = new StringTokenizer(line);
+			x = Double.parseDouble(tokenizer.nextToken());
+			y = Double.parseDouble(tokenizer.nextToken());
+			Point p1 = new Point(x,y);
+			Point p2 = new Point(givenX, givenY);
+			ListOfDist.add(new Distance(p1,p2));
+			System.out.println(new Distance(p1,p2).toString());
 		}
-		for (int j = 0; j < old.size(); j++) {
-			String str = old.get(j);
-			StringTokenizer oldVals = new StringTokenizer(str);
-			Float[] oldTempArr = new Float[oldVals.countTokens()];
-//			System.out.println("****" + oldVals.countTokens());
-			int k = 0;
-			while (oldVals.hasMoreElements()) {
-				oldTempArr[k] = Float.parseFloat(oldVals.nextToken());
-				k++;
-			}
-			// System.out.println(baseYearSamples);
-			for (int l = 0; l < oldTempArr.length - baseYearSamples; l++) {
 
-				float tempSum = 0f;
-				ArrayList<Float> tempArr = new ArrayList<Float>();
+		Collections.sort(ListOfDist);
 
-				for (int m = l; m < l + baseYearSamples; m++) {
-					tempSum += oldTempArr[m];
-					tempArr.add(oldTempArr[m]+oldAvgs.get(j));
-				}
+                Iterator<Distance> dI = ListOfDist.iterator();
 
-				int size = nearest5sums.size();
+                for(int numPts = 0; (numPts < givenK) && (dI.hasNext()); numPts++){
+                    Distance d = dI.next();
+                    Point p = d.GetLeft();
+                    // emit the point
+		    context.write(new Text(new Point(givenX, givenY).toString()), new Text(p.toString()));
+                }
+            }
+    }
 
-				if (size < 1) {
+    public static void main(String[] args) 
+        throws Exception {
+            Configuration conf = new Configuration();
 
-					nearest5sums.add(tempSum);
-					nearest5nextDayVars.add(oldTempArr[l + baseYearSamples]);
-					nearest5Matches.add(tempArr);
+            conf.setInt("k", Integer.parseInt(args[0]));
+            conf.setFloat("x", Float.parseFloat(args[1]));
+            conf.setFloat("y", Float.parseFloat(args[2]));
 
-				} else if (size < 5) {
-					nearest5sums.add(tempSum);
-					nearest5nextDayVars.add(oldTempArr[l + baseYearSamples]);
-					nearest5Matches.add(tempArr);
+            Job job = new Job(conf, "knn");
 
-					int p = nearest5sums.size();
+	    job.setJarByClass(KNN.class);
+	    job.setNumReduceTasks(1);
 
-					while (p > 1
-							&& nearest5sums.get(p - 1) < nearest5sums
-									.get(p - 2)) {
+	    //job.setMapOutputKeyClass(Text.class);
+	    //job.setMapOutputValueClass(Text.class);
 
-						float temp_var = nearest5sums.get(p - 1);
-						float temp_var1 = nearest5nextDayVars.get(p - 1);
-						ArrayList<Float> temp_var2 = nearest5Matches.get(p - 1);
-						nearest5sums.set(p - 1, nearest5sums.get(p - 2));
-						nearest5nextDayVars.set(p - 1,
-								nearest5nextDayVars.get(p - 2));
-						nearest5Matches.set(p - 1, nearest5Matches.get(p - 2));
-						nearest5sums.set(p - 2, temp_var);
-						nearest5nextDayVars.set(p - 2, temp_var1);
-						nearest5Matches.set(p - 2, temp_var2);
-						p--;
+            job.setOutputKeyClass(Text.class);
+            job.setOutputValueClass(Text.class);
 
-					}
+            job.setMapperClass(KNNMap.class);
+	    //job.setCombinerClass(KNNReduce.class);
+            job.setReducerClass(KNNReduce.class);
 
-				} else {
-					if (tempSum < nearest5sums.get(size - 1)) {
-						nearest5sums.set(size - 1, tempSum);
-						nearest5nextDayVars.set(size - 1, oldTempArr[l
-								+ baseYearSamples]);
-						nearest5Matches.set(size - 1, tempArr);
+            job.setInputFormatClass(TextInputFormat.class);
+            job.setOutputFormatClass(TextOutputFormat.class);
 
-						int p = nearest5sums.size();
-						while (p > 1
-								&& nearest5sums.get(p - 1) < nearest5sums
-										.get(p - 2)) {
+            FileInputFormat.addInputPath(job, new Path(args[3]));
+            FileOutputFormat.setOutputPath(job, new Path(args[4]));
 
-							float temp_var = nearest5sums.get(p - 1);
-							float temp_var1 = nearest5nextDayVars.get(p - 1);
-							ArrayList<Float> temp_var2 = nearest5Matches
-									.get(p - 1);
-							nearest5sums.set(p - 1, nearest5sums.get(p - 2));
-							nearest5nextDayVars.set(p - 1,
-									nearest5nextDayVars.get(p - 2));
-							nearest5Matches.set(p - 1,
-									nearest5Matches.get(p - 2));
-							nearest5sums.set(p - 2, temp_var);
-							nearest5nextDayVars.set(p - 2, temp_var1);
-							nearest5Matches.set(p - 2, temp_var2);
-							p--;
-
-						}
-					}
-				}
-
-			}
-		}
-//		System.out.println(nearest5sums.size() + " REMO "
-//				+ nearest5nextDayVars.size());
-		float sum = 0f;
-		for (int g = 0; g < nearest5sums.size(); g++) {
-			sum += nearest5nextDayVars.get(g);
-//			System.out.println(nearest5sums.get(g) + " REMO "
-//					+ nearest5nextDayVars.get(g));
-		}
-		float knnVal = sum / nearest5sums.size();
-		return knnVal;
-	}
+            job.waitForCompletion(true);
+        }
 }
+

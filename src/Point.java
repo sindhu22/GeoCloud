@@ -1,4 +1,3 @@
-package rnn;
 
 import java.util.*;
 
@@ -23,7 +22,10 @@ public class Point implements Cloneable, Comparator, Comparable<Point>
     }
 
     public String toString() {
+	    /*
         return new String("x = " + x + " y = " + y + "\n");
+	*/
+	    return new String(x + " " + y);
     }
 
     public double GetDist(Point p){

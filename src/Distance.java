@@ -1,4 +1,3 @@
-package rnn;
 
 import java.util.*;
 
@@ -31,8 +30,10 @@ public class Distance implements Cloneable, Comparator, Comparable<Distance>
     }
 
     public String toString() {
+	    /*
         return new String("x1 = " + left.GetX() + " y1 = " + left.GetY() + " x2 = " + right.GetX() + " y2 = " +
-        left.GetY() + " distance = " + distance + "\n");
+        left.GetY() + " distance = " + distance + "\n"); */
+	    return new String(left.GetX() + " " + left.GetY() + " " + distance);
     }
 
     public int compare(Object o1, Object o2){
