@@ -1,0 +1,113 @@
+<html>
+<head>
+	<script type="text/JavaScript" src="jsDraw2D.js"></script>
+</head>
+<body>
+	<div id="debug" ></div> 
+	<div id="canvas" style="overflow:hidden;position:relative;width:1000px;height:800px;"></div> 
+
+	<script type="text/JavaScript">
+
+		//Global graphics variable to draw lines and points
+		var gr;	
+
+		//Variable to store the file content from the server
+		var data;
+
+		//Utitlity function to plot points
+	    function plotPoints(points){
+	    	for(i in points){
+	    		gr.fillRectangle(new jsColor("green"),new jsPoint(points[i].x-2,points[i].y+2),4,4);
+	    	}
+	    }
+
+	    //Function to read the data from the remote server
+	    function loadXMLDoc() {
+
+	      if (window.XMLHttpRequest)
+	      {// code for IE7+, Firefox, Chrome, Opera, Safari
+	        xmlhttp=new XMLHttpRequest();
+	      }
+	      else
+	      {// code for IE6, IE5
+	        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	      }
+
+	      xmlhttp.open("POST","file.txt",false);
+	      xmlhttp.send();
+
+	      //Data received from the server
+	      data= xmlhttp.responseText;
+
+	    }
+
+		function run() {
+
+			//Read the data from the server
+			loadXMLDoc();
+
+		    //Create jsGraphics object
+		    gr = new jsGraphics(document.getElementById("canvas"));
+		    
+		    //Draw the coordinates
+			gr.showGrid(20);
+
+			//poionts in the graph
+		    //var points = new Array(new jsPoint(28,35),new jsPoint(52,16),new jsPoint(177,38),new jsPoint(149,85),new jsPoint(57,92));
+		    var points = new Array();
+
+		    //Replace all the newline with space and split the lines in spaces
+		    var array = data.replace( /\n/g, " " ).split( " " )
+
+
+		    //Release the memory allocated to data variable
+		    delete data;
+
+		    
+		    //Process each word in the string
+	    	while (array.length > 0) {
+	    	//var count=0;
+	    	
+	    	//while (count < array.length){
+
+	    	//tempp = temp.concat(array[0]);
+	    	//tempp = temp.concat(array[1]);
+
+        	//add the first two points from the string to the points array
+        	var x = array[0];
+        	var y = array[1];
+
+        	points.push( new jsPoint(parseFloat(x),parseFloat(y)) );
+        	
+        	//alert(x);
+        	//alert(y);
+       		var position = array.indexOf(array[0]);
+
+        	//Remove two element from the array
+        	if (~position)
+          		array.splice(position,2);
+
+      		}
+      		//alert(array.length);
+
+      		//document.getElementById("myDiv").innerHTML=tempp;
+
+		    //Create jsColor object
+		    var colGreen = new jsColor("green");
+
+		    //Create jsPen object
+		    var pen = new jsPen(colGreen,1);
+
+		    //Plot the points
+		    plotPoints(points);
+		    
+		    //draw the curve using the k points
+		    gr.drawClosedCurve(pen,points);
+		}
+
+	    // We'll run the AJAX query when the page loads.
+		window.onload=run;
+
+	</script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<html>
+
+<head>
+
+	<script src="/jquery-2.0.3.min.js"></script>
+
+	<script language="javascript">
+
+		// This just displays the first parameter passed to it
+		// in an alert.
+		function show(json) {
+			document.write("<h1>inside the show function</h1>");
+			alert(json);
+		}
+
+		function run() {
+			$.ajax({
+				url: 'readFile.php',
+				dataType: "json",
+				data: config,
+				success: function(json){
+					for(x in json){
+						result.append(json[x].text);
+						document.write(json[x].text);
+						document.write("<br>");javascript
+						alert(json[x].text);
+					}
+				},
+			});
+		}
+
+		// We'll run the AJAX query when the page loads.
+		window.onload=run;
+
+	</script>
+
+</head>
+
+<body>
+
+	JSON Test Page.
+
+</body>
+
+</html>
