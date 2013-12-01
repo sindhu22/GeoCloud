@@ -43,7 +43,7 @@ public class KNNRTree {
             Integer givenK = Integer.parseInt(conf.get("k"));
             Float  givenX = Float.parseFloat(conf.get("x"));
             Float  givenY = Float.parseFloat(conf.get("y"));
-            System.out.println("Emitting point: " + (givenX.toString() + " " + givenY.toString()) + " " + value.toString());
+            // System.out.println("Emitting point: " + (givenX.toString() + " " + givenY.toString()) + " " + value.toString());
             context.write(new Text(givenX.toString() + " " + givenY.toString()), value);
         }
     }
@@ -97,6 +97,8 @@ public class KNNRTree {
     public static void main(String[] args) 
         throws Exception {
 
+        final long startTime = System.currentTimeMillis();
+
         Configuration conf = new Configuration();
         conf.setInt("k", Integer.parseInt(args[0]));
         conf.setFloat("x", Float.parseFloat(args[1]));
@@ -125,6 +127,8 @@ public class KNNRTree {
 
         job.waitForCompletion(true);
 
+        final long endTime = System.currentTimeMillis();
+        System.out.println("Elapsed Time: " + (endTime - startTime));
 
     }
 }

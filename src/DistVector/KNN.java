@@ -17,8 +17,8 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 public class KNN {
 
     public static class KNNMap extends Mapper <LongWritable, Text, Text, Text> {
-        private double x;
-        private double y;
+        private float x;
+        private float y;
 
         public void map(LongWritable key, Text value, Context context) 
             throws IOException, InterruptedException {
@@ -27,18 +27,18 @@ public class KNN {
             // Get values of K , X and Y
             Configuration conf = context.getConfiguration();
             Integer givenK = Integer.parseInt(conf.get("k"));
-            Double  givenX = (double)Float.parseFloat(conf.get("x"));
-            Double  givenY = (double)Float.parseFloat(conf.get("y"));
+            Float  givenX = Float.parseFloat(conf.get("x"));
+            Float  givenY = Float.parseFloat(conf.get("y"));
 
             // read input points
-            System.out.println("Emitting: " + value.toString());
+            // System.out.println("Emitting: " + value.toString());
             context.write(new Text(new Point(givenX, givenY).toString()), value);
         }
     }
 
     public static class KNNReduce extends Reducer <Text, Text, Text, Text> {
-        private double x;
-        private double y;
+        private float x;
+        private float y;
         ArrayList <Distance> ListOfDist = new ArrayList<Distance>();
 
         public void reduce(Text key, Iterable<Text> values, Context context) 
@@ -46,19 +46,19 @@ public class KNN {
 
             Configuration conf = context.getConfiguration();
             Integer givenK = Integer.parseInt(conf.get("k"));
-            Double  givenX = (double)Float.parseFloat(conf.get("x"));
-            Double  givenY = (double)Float.parseFloat(conf.get("y"));
+            Float  givenX = Float.parseFloat(conf.get("x"));
+            Float  givenY = Float.parseFloat(conf.get("y"));
 
             // read k mapped points
             for(Text value : values){
                 String line = value.toString();
                 StringTokenizer tokenizer = new StringTokenizer(line);
-                x = Double.parseDouble(tokenizer.nextToken());
-                y = Double.parseDouble(tokenizer.nextToken());
+                x = Float.parseFloat(tokenizer.nextToken());
+                y = Float.parseFloat(tokenizer.nextToken());
                 Point p1 = new Point(x,y);
                 Point p2 = new Point(givenX, givenY);
                 ListOfDist.add(new Distance(p1,p2));
-                System.out.println(new Distance(p1,p2).toString());
+                // System.out.println(new Distance(p1,p2).toString());
             }
 
             Collections.sort(ListOfDist);
@@ -76,6 +76,9 @@ public class KNN {
 
     public static void main(String[] args) 
         throws Exception {
+
+        final long startTime = System.currentTimeMillis();
+
         Configuration conf = new Configuration();
 
         conf.setInt("k", Integer.parseInt(args[0]));
@@ -104,6 +107,8 @@ public class KNN {
         FileOutputFormat.setOutputPath(job, new Path(args[4]));
 
         job.waitForCompletion(true);
+        final long endTime = System.currentTimeMillis();
+        System.out.println("Elapsed time: " + (endTime - startTime));
     }
 }
 

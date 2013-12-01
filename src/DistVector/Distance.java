@@ -5,7 +5,7 @@ public class Distance implements Cloneable, Comparator, Comparable<Distance>
 {
     private Point left;
     private Point right;
-    private double distance;
+    private float distance;
 
     public Distance(Point pl, Point pr){ 
         left = pl;
@@ -25,7 +25,7 @@ public class Distance implements Cloneable, Comparator, Comparable<Distance>
         return right;
     }
 
-    public double GetDistance() {
+    public float GetDistance() {
         return distance;
     }
 
@@ -40,11 +40,11 @@ public class Distance implements Cloneable, Comparator, Comparable<Distance>
         Distance d1 = (Distance)o1;
         Distance d2 = (Distance)o2;
 
-        return new Double(d1.GetDistance()).compareTo(d2.GetDistance());
+        return new Float(d1.GetDistance()).compareTo(d2.GetDistance());
     }
 
     public int compareTo(Distance p){
-        return new Double(this.GetDistance()).compareTo(p.GetDistance());
+        return new Float(this.GetDistance()).compareTo(p.GetDistance());
     }
 }
 

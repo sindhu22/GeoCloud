@@ -43,7 +43,7 @@ public class RNNRTree {
 	    Configuration conf = context.getConfiguration();
             Float  givenX = Float.parseFloat(conf.get("x"));
             Float  givenY = Float.parseFloat(conf.get("y"));
-	    System.out.println("Emitting point: " + (givenX.toString() + " " + givenY.toString()) + " " + value.toString());
+	    // System.out.println("Emitting point: " + (givenX.toString() + " " + givenY.toString()) + " " + value.toString());
 	    context.write(new Text(givenX.toString() + " " + givenY.toString()), value);
         }
     }
@@ -85,8 +85,8 @@ public class RNNRTree {
 	    TIntProcedure proc = new EmitProc();
 	    for(Point p : ListOfPoints){
 		    gRNNRTree.nearestN(p, proc, 2, Float.MAX_VALUE);
-		    System.out.println("p = " + p.toString());
-		    System.out.println("NN = " + ListOfPoints.get(pID).toString());
+		    // System.out.println("p = " + p.toString());
+		    // System.out.println("NN = " + ListOfPoints.get(pID).toString());
 		    if(ListOfPoints.get(pID).toString().equals(new Point(givenX, givenY).toString())){
 			    context.write(new Text(new Point(givenX, givenY).toString()), new Text(p.toString()));
 		    }
@@ -96,6 +96,8 @@ public class RNNRTree {
 
     public static void main(String[] args) 
         throws Exception {
+
+        final long startTime = System.currentTimeMillis();
 
         Configuration conf = new Configuration();
         conf.setFloat("x", Float.parseFloat(args[0]));
@@ -124,6 +126,8 @@ public class RNNRTree {
 	
         job.waitForCompletion(true);
 
+        final long endTime = System.currentTimeMillis();
+        System.out.println("Elapsed Time: " + (endTime - startTime));
 
     }
 }

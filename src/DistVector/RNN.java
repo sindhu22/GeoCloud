@@ -17,8 +17,8 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 public class RNN {
 
     public static class RNNMap extends Mapper <LongWritable, Text, Text, Text> {
-        private double x;
-        private double y;
+        private float x;
+        private float y;
         private final static ArrayList<Point>    ListOfPoints = new ArrayList<Point>();
 
         public void map(LongWritable key, Text value, Context context) 
@@ -26,10 +26,10 @@ public class RNN {
 
             // Get values of X and Y
             Configuration conf = context.getConfiguration();
-            Double  givenX = Double.parseDouble(conf.get("x"));
-            Double  givenY = Double.parseDouble(conf.get("y"));
+            Float  givenX = Float.parseFloat(conf.get("x"));
+            Float  givenY = Float.parseFloat(conf.get("y"));
 
-            System.out.println("Emitting: " + value.toString());
+            // System.out.println("Emitting: " + value.toString());
             context.write(new Text(new Point(givenX, givenY).toString()), value);
 
             // read input points
@@ -37,23 +37,23 @@ public class RNN {
     }
 
     public static class RNNReduce extends Reducer <Text, Text, Text, Text> {
-        private double x;
-        private double y;
+        private float x;
+        private float y;
         ArrayList<Point>	ListOfPoints = new ArrayList<Point>();
 
         public void reduce(Text key, Iterable<Text> values, Context context) 
             throws IOException, InterruptedException {
 
             Configuration conf = context.getConfiguration();
-            Double  givenX = Double.parseDouble(conf.get("x"));
-            Double  givenY = Double.parseDouble(conf.get("y"));
+            Float  givenX = Float.parseFloat(conf.get("x"));
+            Float  givenY = Float.parseFloat(conf.get("y"));
             Point GivenPoint = new Point(givenX, givenY);
 
             for(Text value : values){
                 String line = value.toString();
                 StringTokenizer tokenizer = new StringTokenizer(line);
-                x = Double.parseDouble(tokenizer.nextToken());
-                y = Double.parseDouble(tokenizer.nextToken());
+                x = Float.parseFloat(tokenizer.nextToken());
+                y = Float.parseFloat(tokenizer.nextToken());
                 ListOfPoints.add(new Point(x,y));
             }
 
@@ -78,6 +78,7 @@ public class RNN {
 
     public static void main(String[] args) 
         throws Exception {
+        final long startTime = System.currentTimeMillis();
         Configuration conf = new Configuration();
 
         conf.set("x", (args[0]));
@@ -102,6 +103,8 @@ public class RNN {
         FileOutputFormat.setOutputPath(job, new Path(args[3]));
 
         job.waitForCompletion(true);
+        final long endTime = System.currentTimeMillis();
+        System.out.println("Elapsed time: " + (endTime - startTime));
     }
 }
 
