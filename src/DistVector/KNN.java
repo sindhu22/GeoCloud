@@ -17,8 +17,8 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 public class KNN {
 
     public static class KNNMap extends Mapper <LongWritable, Text, Text, Text> {
-        private float x;
-        private float y;
+        private double x;
+        private double y;
 
         public void map(LongWritable key, Text value, Context context) 
             throws IOException, InterruptedException {
@@ -27,8 +27,8 @@ public class KNN {
             // Get values of K , X and Y
             Configuration conf = context.getConfiguration();
             Integer givenK = Integer.parseInt(conf.get("k"));
-            Float  givenX = Float.parseFloat(conf.get("x"));
-            Float  givenY = Float.parseFloat(conf.get("y"));
+            Double  givenX = Double.parseDouble(conf.get("x"));
+            Double  givenY = Double.parseDouble(conf.get("y"));
 
             // read input points
             // System.out.println("Emitting: " + value.toString());
@@ -37,8 +37,8 @@ public class KNN {
     }
 
     public static class KNNReduce extends Reducer <Text, Text, Text, Text> {
-        private float x;
-        private float y;
+        private double x;
+        private double y;
         ArrayList <Distance> ListOfDist = new ArrayList<Distance>();
 
         public void reduce(Text key, Iterable<Text> values, Context context) 
@@ -46,15 +46,15 @@ public class KNN {
 
             Configuration conf = context.getConfiguration();
             Integer givenK = Integer.parseInt(conf.get("k"));
-            Float  givenX = Float.parseFloat(conf.get("x"));
-            Float  givenY = Float.parseFloat(conf.get("y"));
+            Double  givenX = (double)Float.parseFloat(conf.get("x"));
+            Double  givenY = (double)Float.parseFloat(conf.get("y"));
 
             // read k mapped points
             for(Text value : values){
                 String line = value.toString();
                 StringTokenizer tokenizer = new StringTokenizer(line);
-                x = Float.parseFloat(tokenizer.nextToken());
-                y = Float.parseFloat(tokenizer.nextToken());
+                x = Double.parseDouble(tokenizer.nextToken());
+                y = Double.parseDouble(tokenizer.nextToken());
                 Point p1 = new Point(x,y);
                 Point p2 = new Point(givenX, givenY);
                 ListOfDist.add(new Distance(p1,p2));
