@@ -71,7 +71,7 @@ function main()
 
   for (var i = 0; i < lines.length; i++)
   {
-    line = lines[i].split("\t");
+    line = lines[i].split(" ");
     neighborhoods[i] = new google.maps.LatLng(line[0], line[1]);
   };
 }
@@ -151,9 +151,11 @@ function main1()
   // document.body.innerHTML = contentsOfFileAsString;
   iplines = contentsOfFileAsString.split("\n");
   // document.write(l[0]);
-
+  //alert(iplines.length);
+  // alert(iplines[0]);
   for (var i = 0; i < iplines.length; i++) {
-    ipline = iplines[i].split("\t");
+    
+    ipline = iplines[i].split(" ");
     input[i] = new google.maps.LatLng(ipline[0], ipline[1]);
   };
 }
@@ -181,7 +183,7 @@ function drop1() {
   for (var i = 0; i < input.length; i++) {
     setTimeout(function() {
       addMarker1();
-    }, i * 200);
+    }, 2);
   }
 }
 
