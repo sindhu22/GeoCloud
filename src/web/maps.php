@@ -3,9 +3,8 @@
 <html>
 <head>
 
-  <meta charset="utf-8">
-    <!-- <title>Marker animations with <code>setTimeout()</code></title> -->
-
+<meta charset="utf-8">
+<!-- <title>Marker animations with <code>setTimeout()</code></title> -->
 <style>
 
 html, body, #map-canvas
@@ -31,31 +30,31 @@ border: 1px solid #999;
 
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 
-  <script>
-  // If you're adding a number of markers, you may want to
-  // drop them on the map consecutively rather than all at once.
-  // This example shows how to use setTimeout() to space
-  // your markers' animation.
+<script>
+// If you're adding a number of markers, you may want to
+// drop them on the map consecutively rather than all at once.
+// This example shows how to use setTimeout() to space
+// your markers' animation.
 
-  var berlin = new google.maps.LatLng(47, -122.410186);
+var berlin = new google.maps.LatLng(47, -122.410186);
 
 
-  // var neighborhoods = [
-  //   new google.maps.LatLng(52.511467, 13.447179),
-  //   new google.maps.LatLng(52.549061, 13.422975),
-  //   new google.maps.LatLng(52.497622, 13.396110),
-  //   new google.maps.LatLng(52.517683, 13.394393)
-  // ];
+// var neighborhoods = [
+//   new google.maps.LatLng(52.511467, 13.447179),
+//   new google.maps.LatLng(52.549061, 13.422975),
+//   new google.maps.LatLng(52.497622, 13.396110),
+//   new google.maps.LatLng(52.517683, 13.394393)
+// ];
 
-  var neighborhoods = [];
-  var lines = [];
-  var line = [];
+var neighborhoods = [];
+var lines = [];
+var line = [];
 
 /*
    ======================================================
    functions to plot neighbours on the map
    ======================================================
-   */
+ */
 
 function main()
 {
@@ -71,6 +70,7 @@ function main()
 		neighborhoods[i] = new google.maps.LatLng(line[0], line[1]);
 	};
 }
+
 function FileHelper()
 {
 	if (window.XMLHttpRequest)
@@ -101,6 +101,9 @@ function FileHelper()
 	//Data received from the server
 	return xmlhttp.responseText;
 }
+
+// main();
+
 var markers = [];
 var iterator = 0;
 
@@ -108,8 +111,8 @@ var map;
 
 function initialize() {
 	var mapOptions = {
-	zoom: 6,
-      	center: berlin
+zoom: 6,
+      center: berlin
 	};
 
 	map = new google.maps.Map(document.getElementById('map-canvas'),
@@ -137,6 +140,7 @@ icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
 }));
 iterator++;
 }
+
 /*
    ======================================================
    functions to plot all points on the map
@@ -199,6 +203,7 @@ function FileHelper1()
 {
 
 }
+
 // main1();
 var mark = [];
 var iter = 0;
@@ -224,5 +229,21 @@ animation: google.maps.Animation.DROP
 iter++;
 }
 
+google.maps.event.addDomListener(window, 'load', initialize);
+
+window.onload=drop;
+
+</script>
 </head>
+<body>
+<div id="panel" style="margin-left: -52px">
+
+<!-- <button id="drop" onclick="drop1()">Show All Points</button> -->
+
+<!-- <button id="drop" onclick="drop()">Back</button> -->
+<input type="button" value="Back" onclick="location.href='index.html';">
+
+</div>
+<div id="map-canvas"></div>
+</body>
 </html>
