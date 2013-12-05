@@ -71,6 +71,36 @@ function main()
 		neighborhoods[i] = new google.maps.LatLng(line[0], line[1]);
 	};
 }
+function FileHelper()
+{
+	if (window.XMLHttpRequest)
+	{// code for IE7+, Firefox, Chrome, Opera, Safari
+		xmlhttp=new XMLHttpRequest();
+	}
+	else
+	{// code for IE6, IE5
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	}
+
+	var outputFileName = "<?php echo $_POST["element_2"] ?>";
+
+	xmlhttp.open("POST",outputFileName,false);
+
+	//check the existance of the file on the server
+	//xmlhttp.onreadystatechange = function() {
+	// if (self.xmlhttp.readyState == 4) {
+	//  if (self.xmlhttp.status == 404) {
+	//   alert('File: ' + outputFileName + ' does not exist. Exiting...');
+	//  return;
+	// }
+	// }
+	// }  
+
+	xmlhttp.send();
+
+	//Data received from the server
+	return xmlhttp.responseText;
+}
 
 </head>
 </html>
