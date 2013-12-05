@@ -51,7 +51,26 @@ border: 1px solid #999;
   var lines = [];
   var line = [];
 
+/*
+   ======================================================
+   functions to plot neighbours on the map
+   ======================================================
+   */
 
+function main()
+{
+	var contentsOfFileAsString = FileHelper();
+
+	// document.body.innerHTML = contentsOfFileAsString;
+	lines = contentsOfFileAsString.split("\n");
+	// document.write(l[0]);
+
+	for (var i = 0; i < lines.length; i++)
+	{
+		line = lines[i].split(" ");
+		neighborhoods[i] = new google.maps.LatLng(line[0], line[1]);
+	};
+}
 
 </head>
 </html>
