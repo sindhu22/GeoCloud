@@ -51,7 +51,70 @@
     		}
     	}
 
+    	function truncate(_value)
+    	{
+    		if (_value<0) return Math.ceil(_value);
+    		else return Math.floor(_value);
+    	}
 
-    </script>
+	    //Function to read the data from the remote server
+	    function loadXMLDoc() {
+
+	    	if (window.XMLHttpRequest)
+	      	{// code for IE7+, Firefox, Chrome, Opera, Safari
+	      		xmlhttp=new XMLHttpRequest();
+	      	}
+	      	else
+	      	{// code for IE6, IE5
+	      		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	      	}
+
+	      	var outputFileName = "<?php echo $_POST["element_2"] ?>";
+
+	      	xmlhttp.open("POST",outputFileName,false);
+
+	      	//check if the file is present or not
+	      	xmlhttp.onreadystatechange = function() {
+	      		if (self.xmlhttp.readyState == 4) {
+	      			if (self.xmlhttp.status == 404) {
+	      				alert('File: ' + outputFileName + ' does not exist. Exiting...');
+	      				return;
+	      			}
+	      		}
+	      	}
+
+	      	xmlhttp.send();
+
+		    //Data received from the server
+		    output= xmlhttp.responseText;
+
+		    plotInputFlag = "<?php if (isset($_POST["element_5_1"])) { echo $_POST["element_5_1"]; } ?>";
+
+		    if ( plotInputFlag == "yes"){
+		    	var inputFilename = "<?php echo $_POST["element_1"] ?>";
+
+			  //Open connecton to read the new file
+			  xmlhttp.open("POST", inputFilename , false);
+
+
+				 //check the existance of the file on server
+				 xmlhttp.onreadystatechange = function() {
+				 	if (self.xmlhttp.readyState == 4) {
+				 		if (self.xmlhttp.status == 404) {
+				 			alert('File: ' + inputFilename + ' does not exist. Exiting...');
+				 			return;
+				 		}
+				 	}
+				 }	
+
+				 xmlhttp.send();
+
+			  //Receive the data from server
+			  input = xmlhttp.responseText;
+
+			}
+		}
+
+	</script>
 </body>
 </html>
