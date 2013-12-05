@@ -1,10 +1,19 @@
 
+/* This class implements K nearest neighbor algorithm for given dataset
+   using distance vector method using map reduce paradigm.
+ */
+
+import java.util.*;
+/* Authors: Abhijeet Nayak,
+   	    Dhananjay Bhirud,
+	    Kumar Sadhu,
+	    Sindhu Suryanayana
+ */
 import java.util.ArrayList;
 import java.util.Collections;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
-import java.util.*;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.conf.*;
 import org.apache.hadoop.io.*;
