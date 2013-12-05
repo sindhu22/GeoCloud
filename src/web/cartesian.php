@@ -159,6 +159,84 @@
 
 		}
 
+		function plotResult(){
+
+		    //Create jsGraphics object
+		    gr = new jsGraphics(document.getElementById("canvas"));
+
+		    //get the dynamic height and width of the canvas
+		    var x = $('#canvas').width();
+		    var y = $('#canvas').height();
+		    // alert ( Math.ceil(x/2) + " " + Math.ceil(y/2));
+
+		    x = Math.ceil(x/2);
+		    y = Math.ceil(y/2);
+
+		    //set the origin of the graph
+		    gr.setOrigin(new jsPoint(x,y)); 
+			//gr.setOrigin(new jsPoint(400,400)); 
+
+    		//Set the coordinate system 
+    		gr.setCoordinateSystem("cartecian"); 
+
+		    //Draw the coordinates
+		    gr.showGrid(scale);
+
+
+		//poionts in the graph
+		//var points = new Array(new jsPoint(28,35),new jsPoint(52,16),new jsPoint(177,38),new jsPoint(149,85),new jsPoint(57,92));
+		var points = new Array();
+
+		//Replace all the newline with space and split the lines in spaces
+		var array = output.replace( /\n/g, " " ).split( " " )
+
+		// output=output.replace(/\n/g, " " );
+		// output=String(output).replace( "\t", " " );
+		// output=output.replace( '(', ' ' );
+		// output=output.replace( ')', ' ' );
+
+		//Release the memory allocated to data variable
+		delete output;
+
+		//Process each word in the string
+		while (array.length > 0) {
+
+        //add the first two points from the string to the points array
+        var x = array[0];
+        var y = array[1];
+
+        points.push( new jsPoint( truncate(parseFloat(x)),truncate(parseFloat(y)) ) );
+
+        var position = array.indexOf(array[0]);
+
+        //Remove two element from the array
+        if (~position)
+        	array.splice(position,2);
+
+    }
+
+	    //Create jsColor object
+	    var colRed = new jsColor("red");
+
+	    //Create jsPen object
+	    var pen = new jsPen(colRed,1);
+
+	    //Plot the points
+	    plotPoints(points,4,"red");
+
+	    //draw the curve using the k points
+	    //gr.drawClosedCurve(pen,points);
+
+
+	   	//Center
+	   	var center = new jsPoint(187,181);
+
+	   	gr.fillRectangle(new jsColor("black"), new jsPoint(center.x-2,center.y+2),2+2,2+2);
+
+	   	plotGraph(center,points);
+	   }
+
+
 
 	</script>
 </body>
