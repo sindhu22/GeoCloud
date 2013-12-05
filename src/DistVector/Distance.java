@@ -1,4 +1,12 @@
+ /* This class implements basic methods required to construct point objects
+    and calculate distance metrics and comparators between point objects.
+ */
 
+/* Authors: Abhijeet Nayak,
+   	    Dhananjay Bhirud,
+	    Kumar Sadhu,
+	    Sindhu Suryanayana
+ */
 import java.util.*;
 
 public class Distance implements Cloneable, Comparator, Comparable<Distance> 
