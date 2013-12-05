@@ -199,7 +199,30 @@ function FileHelper1()
 {
 
 }
+// main1();
+var mark = [];
+var iter = 0;
 
+function drop1() {
+	main1();
+	for (var i = 0; i < input.length; i++) {
+		setTimeout(function() {
+				addMarker1();
+				}, i * 200);
+	}
+}
+
+function addMarker1() {
+	// marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png')
+	markers.push(new google.maps.Marker({
+position: input[iter],
+map: map,
+draggable: false,
+animation: google.maps.Animation.DROP
+
+}));
+iter++;
+}
 
 </head>
 </html>
