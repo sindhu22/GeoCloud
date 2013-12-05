@@ -101,6 +101,22 @@ function FileHelper()
 	//Data received from the server
 	return xmlhttp.responseText;
 }
+var markers = [];
+var iterator = 0;
+
+var map;
+
+function initialize() {
+	var mapOptions = {
+	zoom: 6,
+      	center: berlin
+	};
+
+	map = new google.maps.Map(document.getElementById('map-canvas'),
+			mapOptions);
+}
+
+
 
 </head>
 </html>
