@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>KNN/RNN Result Viewer</title>
+	<link rel="stylesheet" type="text/css" href="view.css" media="all">
+	
+	<script type="text/javascript" src="view.js">
+	</script>
+	
+	<script type="text/javascript" src="jquery.js">
+	</script>
+
+	<script type="text/javascript">
+
+	//Utility function to validate the form
+	function validateForm()
+	{
+		var outFilename=document.forms["myForm"]["element_2"].value;
+		var inFilename=document.forms["myForm"]["element_1"].value;
+		var printInputOption=document.forms["myForm"]["element_5_1"].checked;
+		var percentageOfInputPrint=document.forms["myForm"]["element_3"].value;
+
+		if (outFilename==null || outFilename=="")
+		{
+			alert("Output file must be given");
+			return false;
+		}
+
+		//Validate the input file location if Print input data set is selected
+		if ( printInputOption == true)
+		{
+			if ( inFilename==null || inFilename=="")
+			{
+				alert("Input file must be given as Print input data set is selected");
+				return false;
+			}
+		}
+
+		var mapOption = document.forms["myForm"]["element_6"].value;
+		if (mapOption == "Cartesian")
+			$('form').get(0).setAttribute('action', 'cartesian.php'); 
+		else 
+			$('form').get(0).setAttribute('action', 'maps.php'); 
+
+	}
+
+		
+</script>
+
+</head>
+
+<body id="main_body" >
+	
+	<img id="top" src="top.png" alt="">
+	<div id="form_container">
+
+		<h1><a>KNN/RNN Result Viewer</a></h1>
+
+		<form id="myForm" name="myForm" class="appnitro"  method="post" onsubmit="return validateForm()"  action="" >
+
+			<div class="form_description">
+				<h2>KNN/RNN Result Viewer</h2>
+				<p>Authors: Abhijeet, Dhananjay, Kumar, Sindhu</p>
+			</div>	
+
+			<ul >
+
+				<li id="li_1" >
+					<label class="description" for="element_1">Input File Location </label>
+					<div>
+						<input id="element_1" name="element_1" class="element text medium" type="text" maxlength="255" value=""/> 
+					</div> 
+				</li>
+
+				<li id="li_2" >
+					<label class="description" for="element_2">Output File Location </label>
+					<div>
+						<input id="element_2" name="element_2" class="element text medium" type="text" maxlength="255" value=""/> 
+					</div> 
+				</li>	
+
+				<li id="li_6" >
+
+				<label class="description" for="element_6">Graph Type
+				</label>
+				<div>
+					<select class="element select medium" id="element_6" name="element_6" > 
+						<option value="Cartesian" selected="selected">Cartesian</option>
+						<option value="Maps">World Map</option>
+					</select>
+				</div> 
+				</li>		
+
+				<li id="li_4" >
+				<label class="description" for="element_4">Graph Scale </label>
+				<div>
+					<select class="element select medium" id="element_4" name="element_4"> 
+						<option value="20" selected="selected">20</option>
+						<option value="50" >50</option>
+						<option value="100" >100</option>
+						<option value="150" >150</option>
+						<option value="200" >200</option>
+						<option value="500" >500</option>
+						<option value="1000" >1000</option>
+						<option value="10000" >10000</option>
+
+					</select>
+				</div> 
+			</li>		
+
+			<li id="li_5" >
+				<label class="description" for="element_5">Print Input Data Set</label>
+				<span>
+					<input id="element_5_1" name="element_5_1" class="element checkbox" type="checkbox" value="yes" />
+					<label class="choice" for="element_5_1" name="checkbox">Yes</label>
+				</span> 
+			</li>		
+
+			<li id="li_3" >
+			<label class="description" for="element_3">Print Percentage of Input Data Set </label>
+			<div>
+				<input id="element_3" name="element_3" class="element text medium" type="text" maxlength="255" value="100"/> 
+			</div> 
+		</li>
+
+		<li class="buttons">
+			<input type="hidden" name="form_id" value="751134" />
+
+			<input id="saveForm" class="button_text" type="submit" name="submit" value="Plot The Graph" />
+		</li>
+	</ul>
+
+</form>	
+<div id="footer">
+	Team: GeoCloud Rocks
+</div>
+</div>
+<img id="bottom" src="bottom.png" alt="">
+
+</body>
+</html>
