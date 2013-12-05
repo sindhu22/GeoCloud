@@ -116,6 +116,27 @@ function initialize() {
 			mapOptions);
 }
 
+function drop() {
+	drop1();
+	main();
+	for (var i = 0; i < neighborhoods.length; i++) {
+		setTimeout(function() {
+				addMarker();
+				}, i * 500);
+	}
+}
+
+function addMarker() {
+
+	markers.push(new google.maps.Marker({
+position: neighborhoods[iterator],
+map: map,
+draggable: false,
+animation: google.maps.Animation.BOUNCE,
+icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+}));
+iterator++;
+}
 
 
 </head>
