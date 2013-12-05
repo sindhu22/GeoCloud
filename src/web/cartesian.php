@@ -39,8 +39,19 @@
 			}
 		}
 
-		
+		function plotGraph(center, points){
+			//Create jsColor object
+			var col = new jsColor("red");
 
-	</script>
+    		//Create jsPen object
+    		var pen = new jsPen(col,2);
+
+    		for(i in points){
+    			gr.drawLine(pen, center, points[i] );
+    		}
+    	}
+
+
+    </script>
 </body>
 </html>
