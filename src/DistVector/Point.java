@@ -1,6 +1,15 @@
+/* This class implements methods related to point data structure.
+   This class is a basic block of the project as project involves dealing
+   with spatial data in 2D as points (x,y) coordinates.
+ */
 
 import java.util.*;
-
+/* Authors: Abhijeet Nayak,
+   	    Dhananjay Bhirud,
+	    Kumar Sadhu,
+	    Sindhu Suryanayana
+ */
+	
 public class Point implements Cloneable, Comparator, Comparable<Point> 
 {
     private double x = 0, y = 0;
