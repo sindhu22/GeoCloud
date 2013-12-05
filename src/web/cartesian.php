@@ -115,6 +115,51 @@
 			}
 		}
 
+		function plotInput(){
+
+			//poionts in the graph
+		    //var points = new Array(new jsPoint(28,35),new jsPoint(52,16),new jsPoint(177,38),new jsPoint(149,85),new jsPoint(57,92));
+		    var points = new Array();
+
+		    //Replace all the newline with space and split the lines in spaces
+		    var array = input.replace( /\n/g, " " ).split( " " )
+
+
+		    //Release the memory allocated to data variable
+		    delete input;
+
+		    
+		    //Process each word in the string
+		    while (array.length > 0) {
+
+        	//add the first two points from the string to the points array
+        	var x = array[0];
+        	var y = array[1];
+
+        	// points.push( new jsPoint(parseFloat(x),parseFloat(y)) );
+        	points.push( new jsPoint( truncate(parseFloat(x)),truncate(parseFloat(y)) ) );
+        	
+        	var position = array.indexOf(array[0]);
+
+        	//Remove two element from the array
+        	if (~position)
+        		array.splice(position,2);
+
+        }
+
+       		//Create jsColor object
+      		//var colBlack = new jsColor("black");
+
+		    //Create jsPen object
+		    // var pen = new jsPen(colBlack,1);
+
+		    //Plot the points
+		    plotPoints(points,2, "olive");
+
+
+		}
+
+
 	</script>
 </body>
 </html>
