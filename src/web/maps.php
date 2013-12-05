@@ -137,6 +137,68 @@ icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
 }));
 iterator++;
 }
+/*
+   ======================================================
+   functions to plot all points on the map
+   ======================================================
+ */
+
+var input = [];
+var iplines = [];
+var ipline = [];
+
+
+function main1()
+{
+
+	var plotInputFlag = "<?php if (isset($_POST["element_5_1"])) { echo $_POST["element_5_1"]; } ?>";
+	var inputFilename = "";
+
+	if ( plotInputFlag == "yes"){
+		inputFilename = "<?php echo $_POST["element_1"] ?>";
+
+		if (window.XMLHttpRequest)
+		{// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp=new XMLHttpRequest();
+		}
+		else
+		{// code for IE6, IE5
+			xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		//Open connecton to read the new file
+		xmlhttp.open("POST", inputFilename , false);
+
+		//Check the exitance of the file on the server
+		// xmlhttp.onreadystatechange = function() {
+		// if (self.xmlhttp.readyState == 4) {
+		//   if (self.xmlhttp.status == 404) {
+		//    alert('File: ' + inputFilename + ' does not exist. Exiting...');
+		//    return;
+		// }
+		// }
+		// }  
+
+		xmlhttp.send();
+
+		//Receive the data from server
+		var contentsOfFileAsString = xmlhttp.responseText;
+
+
+		iplines = contentsOfFileAsString.split("\n");
+		// document.write(l[0]);
+
+		for (var i = 0; i < iplines.length; i++) {
+			ipline = iplines[i].split("\t");
+			input[i] = new google.maps.LatLng(ipline[0], ipline[1]);
+		};
+	}
+}
+
+function FileHelper1()
+{
+
+}
 
 
 </head>
