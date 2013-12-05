@@ -236,8 +236,23 @@
 	   	plotGraph(center,points);
 	   }
 
+	   function run() {
 
+		//Read the data from the serve
+		loadXMLDoc();
 
-	</script>
+		//Plot the results from the map reduce function
+		plotResult();
+
+		//If the input flag is set plot all the input points
+		if ( plotInputFlag == "yes"){
+			plotInput();
+		}
+	}
+
+	// We'll run the AJAX query when the page loads.
+	window.onload=run;
+
+</script>
 </body>
 </html>
