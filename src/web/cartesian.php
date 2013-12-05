@@ -32,6 +32,9 @@
 		//Extract the scale and draw them on canvas
 		var scale = "<?php echo $_POST["element_4"] ?>";
 
+		//Center of the solutions
+		var center;
+
 		//Utitlity function to plot points
 		function plotPoints(points , size, color){
 			for(i in points){
@@ -74,14 +77,14 @@
 	      	xmlhttp.open("POST",outputFileName,false);
 
 	      	//check if the file is present or not
-	      	xmlhttp.onreadystatechange = function() {
-	      		if (self.xmlhttp.readyState == 4) {
-	      			if (self.xmlhttp.status == 404) {
-	      				alert('File: ' + outputFileName + ' does not exist. Exiting...');
-	      				return;
-	      			}
-	      		}
-	      	}
+	      	// xmlhttp.onreadystatechange = function() {
+	      	// 	if (self.xmlhttp.readyState == 4) {
+	      	// 		if (self.xmlhttp.status == 404) {
+	      	// 			alert('File: ' + outputFileName + ' does not exist. Exiting...');
+	      	// 			return;
+	      	// 		}
+	      	// 	}
+	      	// }
 
 	      	xmlhttp.send();
 
@@ -98,14 +101,14 @@
 
 
 				 //check the existance of the file on server
-				 xmlhttp.onreadystatechange = function() {
-				 	if (self.xmlhttp.readyState == 4) {
-				 		if (self.xmlhttp.status == 404) {
-				 			alert('File: ' + inputFilename + ' does not exist. Exiting...');
-				 			return;
-				 		}
-				 	}
-				 }	
+				 // xmlhttp.onreadystatechange = function() {
+				 // 	if (self.xmlhttp.readyState == 4) {
+				 // 		if (self.xmlhttp.status == 404) {
+				 // 			alert('File: ' + inputFilename + ' does not exist. Exiting...');
+				 // 			return;
+				 // 		}
+				 // 	}
+				 // }	
 
 				 xmlhttp.send();
 
@@ -188,7 +191,8 @@
 		var points = new Array();
 
 		//Replace all the newline with space and split the lines in spaces
-		var array = output.replace( /\n/g, " " ).split( " " )
+		//var array = output.replace( /\n/g, " " ).split( " " )
+
 
 		// output=output.replace(/\n/g, " " );
 		// output=String(output).replace( "\t", " " );
@@ -229,7 +233,7 @@
 
 
 	   	//Center
-	   	var center = new jsPoint(187,181);
+	   	//var center = new jsPoint(187,181);
 
 	   	gr.fillRectangle(new jsColor("black"), new jsPoint(center.x-2,center.y+2),2+2,2+2);
 
