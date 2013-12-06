@@ -15,12 +15,15 @@ echo "Initiated Compilation"
 # Compile KNNRTree with libraries in jars folder with KNNRTree.java
 # Create the jar file in the respective folder
 
+LIBS="../jars/hadoop-core-1.2.1.jar:../jars/jsi-1.0.0.jar:../jars/trove4j-2.0.2.jar"
+HADOOP_LIBS="../jars/hadoop-core-1.2.1.jar"
+
 if [ "$1" = "KNNRTree" ]
 then
     cd RTree
     rm KNNRTree.jar
     rm *.class
-    javac -classpath ../jars/hadoop-core-1.2.1.jar:../jars/jsi-1.0.0.jar:../jars/trove4j-2.0.2.jar KNNRTree.java
+    javac -classpath ${LIBS} KNNRTree.java
     jar cf KNNRTree.jar *.class
     rm *.class
     cd ..
@@ -34,7 +37,7 @@ then
     cd RTree
     rm RNNRTree.jar
     rm *.class
-    javac -classpath ../jars/hadoop-core-1.2.1.jar:../jars/jsi-1.0.0.jar:../jars/trove4j-2.0.2.jar RNNRTree.java
+    javac -classpath ${LIBS} RNNRTree.java
     jar cf RNNRTree.jar *.class
     rm *.class
     cd ..
@@ -48,7 +51,7 @@ then
 cd DistVector
     rm KNN.jar
     rm *.class
-    javac -classpath ../jars/hadoop-core-1.2.1.jar Point.java Distance.java KNN.java
+    javac -classpath ${HADOOP_LIBS} Point.java Distance.java KNN.java
     jar cf KNN.jar *.class
     rm *.class
     cd ..
@@ -63,7 +66,7 @@ then
 cd DistVector
     rm RNN.jar
     rm *.class
-    javac -classpath ../jars/hadoop-core-1.2.1.jar Point.java Distance.java RNN.java
+    javac -classpath ${HADOOP_LIBS} Point.java Distance.java RNN.java
     jar cf RNN.jar *.class
     rm *.class
     cd ..
@@ -73,5 +76,3 @@ cd DistVector
 else
     echo "invalid option"
 fi
-
-
