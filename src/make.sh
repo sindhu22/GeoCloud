@@ -17,11 +17,13 @@ echo "Initiated Compilation"
 
 if [ "$1" = "KNNRTree" ]
 then
-    rm RTree/KNNRTree.jar
-    rm RTree/*.class
-    javac -classpath jars/hadoop-core-0.20.2.jar:jars/jsi-1.0.0.jar:jars/trove4j-2.0.2.jar RTree/KNNRTree.java
-    jar cf RTree/KNNRTree.jar RTree/*.class
-    rm RTree/*.class
+    cd RTree
+    rm KNNRTree.jar
+    rm *.class
+    javac -classpath ../jars/hadoop-core-1.2.1.jar:../jars/jsi-1.0.0.jar:../jars/trove4j-2.0.2.jar KNNRTree.java
+    jar cf KNNRTree.jar *.class
+    rm *.class
+    cd ..
     echo "jar created"
 
 # Compile RNNRTree with libraries in jars folder with RNNRTree.java
@@ -29,11 +31,13 @@ then
 
 elif [ "$1" = "RNNRTree" ]
 then
-    rm RTree/RNNRTree.jar
-    rm RTree/*.class
-    javac -classpath jars/hadoop-core-0.20.2.jar:jars/jsi-1.0.0.jar:jars/trove4j-2.0.2.jar RTree/RNNRTree.java
-    jar cf RTree/RNNRTree.jar RTree/*.class
-    rm RTree/*.class
+    cd RTree
+    rm RNNRTree.jar
+    rm *.class
+    javac -classpath ../jars/hadoop-core-1.2.1.jar:../jars/jsi-1.0.0.jar:../jars/trove4j-2.0.2.jar RNNRTree.java
+    jar cf RNNRTree.jar *.class
+    rm *.class
+    cd ..
     echo "jar created"
 
 # Compile RNNRTree with libraries in jars folder with KNN.java
@@ -41,11 +45,13 @@ then
 
 elif [ "$1" = "KNN" ]
 then
-    rm DistVector/KNN.jar
-    rm DistVector/*.class
-    javac -classpath jars/hadoop-core-0.20.2.jar DistVector/Point.java DistVector/Distance.java DistVector/KNN.java
-    jar cf DistVector/KNN.jar DistVector/*.class
-    rm DistVector/*.class
+cd DistVector
+    rm KNN.jar
+    rm *.class
+    javac -classpath ../jars/hadoop-core-1.2.1.jar Point.java Distance.java KNN.java
+    jar cf KNN.jar *.class
+    rm *.class
+    cd ..
     echo "jar created"
 
 
@@ -54,11 +60,13 @@ then
 
 elif [ "$1" = "RNN" ]
 then
-    rm DistVector/RNN.jar
-    rm DistVector/*.class
-    javac -classpath jars/hadoop-core-0.20.2.jar DistVector/Point.java DistVector/Distance.java DistVector/RNN.java
-    jar cf DistVector/RNN.jar DistVector/*.class
-    rm DistVector/*.class
+cd DistVector
+    rm RNN.jar
+    rm *.class
+    javac -classpath ../jars/hadoop-core-1.2.1.jar Point.java Distance.java RNN.java
+    jar cf RNN.jar *.class
+    rm *.class
+    cd ..
     echo "jar created"
 
 
