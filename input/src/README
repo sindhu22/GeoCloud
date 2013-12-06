@@ -1,0 +1,11 @@
+Randomizer Input
+
+// Used to generate random input of any size
+// Enter the required input co-ordinate details when asked
+
+how-to use
+
+g++ InputRandomizer.cpp
+./a.out
+
+
