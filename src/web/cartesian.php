@@ -96,24 +96,24 @@
 		    if ( plotInputFlag == "yes"){
 		    	var inputFilename = "<?php echo $_POST["element_1"] ?>";
 
-			  //Open connecton to read the new file
-			  xmlhttp.open("POST", inputFilename , false);
+			  	//Open connecton to read the new file
+			  	xmlhttp.open("POST", inputFilename , false);
 
 
-				 //check the existance of the file on server
-				 // xmlhttp.onreadystatechange = function() {
-				 // 	if (self.xmlhttp.readyState == 4) {
-				 // 		if (self.xmlhttp.status == 404) {
-				 // 			alert('File: ' + inputFilename + ' does not exist. Exiting...');
-				 // 			return;
-				 // 		}
-				 // 	}
-				 // }	
+				//check the existance of the file on server
+				// xmlhttp.onreadystatechange = function() {
+				// 	if (self.xmlhttp.readyState == 4) {
+				// 		if (self.xmlhttp.status == 404) {
+				// 			alert('File: ' + inputFilename + ' does not exist. Exiting...');
+				// 			return;
+				// 		}
+				// 	}
+				// }	
 
-				 xmlhttp.send();
+				xmlhttp.send();
 
-			  //Receive the data from server
-			  input = xmlhttp.responseText;
+			  	//Receive the data from server
+			  	input = xmlhttp.responseText;
 
 			}
 		}
@@ -186,58 +186,59 @@
 		    gr.showGrid(scale);
 
 
-		//poionts in the graph
-		//var points = new Array(new jsPoint(28,35),new jsPoint(52,16),new jsPoint(177,38),new jsPoint(149,85),new jsPoint(57,92));
-		var points = new Array();
+			//poionts in the graph
+			//var points = new Array(new jsPoint(28,35),new jsPoint(52,16),new jsPoint(177,38),new jsPoint(149,85),new jsPoint(57,92));
+			var points = new Array();
 
-		//Replace all the newline with space and split the lines in spaces
-		//var array = output.replace( /\n/g, " " ).split( " " )
+			//Replace all the newline with space and split the lines in spaces
+			var string = output.replace( /(\n|\r\n|\t)/gm, " " );
 
+			//alert (string);
+								
+			//Release memory allocated to output
+			delete output;
 
-		// output=output.replace(/\n/g, " " );
-		// output=String(output).replace( "\t", " " );
-		// output=output.replace( '(', ' ' );
-		// output=output.replace( ')', ' ' );
+			var array = string.split( " " );
 
-		//Release the memory allocated to data variable
-		delete output;
+			//variable to hold store center x and y
+			var cx = array[0];
+			var cy = array[1];
+			
+			//Process each word in the string
+			while (array.length > 0) {
 
-		//Process each word in the string
-		while (array.length > 0) {
+		        //add the first two points from the string to the points array
+		        var x = array[2];
+		        var y = array[3];
 
-        //add the first two points from the string to the points array
-        var x = array[0];
-        var y = array[1];
+		        points.push( new jsPoint( truncate(parseFloat(x)),truncate(parseFloat(y)) ) );
 
-        points.push( new jsPoint( truncate(parseFloat(x)),truncate(parseFloat(y)) ) );
+		        var position = array.indexOf(array[0]);
 
-        var position = array.indexOf(array[0]);
+		        //Remove two element from the array
+		        if (~position)
+		        	array.splice(position,4);
 
-        //Remove two element from the array
-        if (~position)
-        	array.splice(position,2);
+	    	}
 
-    }
+		    //Create jsColor object
+		    var colRed = new jsColor("red");
 
-	    //Create jsColor object
-	    var colRed = new jsColor("red");
+		    //Create jsPen object
+		    var pen = new jsPen(colRed,1);
 
-	    //Create jsPen object
-	    var pen = new jsPen(colRed,1);
+		    //Plot the points
+		    plotPoints(points,4,"red");
 
-	    //Plot the points
-	    plotPoints(points,4,"red");
+		    //draw the curve using the k points
+		    //gr.drawClosedCurve(pen,points);
 
-	    //draw the curve using the k points
-	    //gr.drawClosedCurve(pen,points);
+		   	//Set the center point
+		   	center = new jsPoint(cx,cy);
 
+		   	gr.fillRectangle(new jsColor("black"), new jsPoint(center.x-3,center.y+3),3+2,3+2);
 
-	   	//Center
-	   	//var center = new jsPoint(187,181);
-
-	   	gr.fillRectangle(new jsColor("black"), new jsPoint(center.x-2,center.y+2),2+2,2+2);
-
-	   	plotGraph(center,points);
+		   	plotGraph(center,points);
 	   }
 
 	   function run() {
@@ -252,6 +253,8 @@
 		if ( plotInputFlag == "yes"){
 			plotInput();
 		}
+
+		//gr.fillRectangle(new jsColor("black"), new jsPoint(center.x-3,center.y-3),3+2,3+2);
 	}
 
 	// We'll run the AJAX query when the page loads.
