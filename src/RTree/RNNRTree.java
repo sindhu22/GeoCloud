@@ -88,7 +88,8 @@ public class RNNRTree {
 		    // System.out.println("p = " + p.toString());
 		    // System.out.println("NN = " + ListOfPoints.get(pID).toString());
 		    if(ListOfPoints.get(pID).toString().equals(new Point(givenX, givenY).toString())){
-			    context.write(new Text(new Point(givenX, givenY).toString()), new Text(p.toString()));
+			    // context.write(new Text(new Point(givenX, givenY).toString()), new Text(p.toString()));
+			    context.write(new Text(givenX + " " + givenY), new Text(p.x + " " + p.y));
 		    }
 	    }
         }

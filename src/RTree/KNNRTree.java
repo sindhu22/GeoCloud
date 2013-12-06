@@ -89,7 +89,7 @@ public class KNNRTree {
             gKNNRTree.nearestN(new Point(givenX, givenY), proc, givenK, Float.MAX_VALUE);
 
             for(int i : kNNPoints){
-                context.write(new Text(new Point(givenX, givenY).toString()), new Text(ListOfPoints.get(i).toString()));
+                context.write(new Text(givenX + " " + givenY), new Text(ListOfPoints.get(i).x + " " + ListOfPoints.get(i).y));
             }
         }
     }

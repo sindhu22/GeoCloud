@@ -69,7 +69,8 @@ public class RNN {
                 Point NN = ListOfDist.get(0).GetRight();
                 if(NN.toString().equals(GivenPoint.toString())){
                     // emit the point
-                    context.write(new Text(p1.toString()), new Text(GivenPoint.toString()));
+                    // context.write(new Text(p1.toString()), new Text(GivenPoint.toString()));
+			context.write(new Text(p1.GetX() + " " + p1.GetY()), new Text(GivenPoint.GetX() + " " + GivenPoint.GetY()));
                 }
             }
         }

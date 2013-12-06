@@ -78,7 +78,7 @@ public class KNN {
                 Distance d = dI.next();
                 Point p = d.GetLeft();
                 // emit the point
-                context.write(new Text(new Point(givenX, givenY).toString()), new Text(p.toString()));
+                context.write(new Text(givenX + " " + givenY), new Text(p.GetX() + " " + p.GetY()));
             }
         }
     }
