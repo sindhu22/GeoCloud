@@ -46,9 +46,9 @@ var berlin = new google.maps.LatLng(47, -122.410186);
 //   new google.maps.LatLng(52.517683, 13.394393)
 // ];
 
-var neighborhoods = [];
-var lines = [];
-var line = [];
+var neighborhoods = new Array();
+var lines ;
+var line ;
 
 /*
    ======================================================
@@ -59,6 +59,34 @@ var line = [];
 function main()
 {
 	var contentsOfFileAsString = FileHelper();
+	// alert(contentsOfFileAsString);
+	// var a = contentsOfFileAsString.split("\n");
+	// 	var point = [];
+		// var input_point;
+	// 	// for(int i=0; i<2; i++)
+	// 	// {
+	// 	// 	point[i] = "";
+	// 	// 	input_point[i] = "";
+	// 	// };
+
+	// 	for (int i=0; i<a.length; i++)
+	// 	{
+	// 		var t = a[i].split(" ");
+
+	// 		// t[0] = t[0].substring(1, t[0].length- 1);
+	// 		// t[1] = t[1].substring(1, t[1].length- 1);
+	// 			if(i == 0)
+	// 			{
+	// 				input_point = t[0].split(" ");
+	// 			}
+
+	// 			point = t[1].split(" ");
+	// 			neighborhoods[i] = new google.maps.LatLng(point[0], point[1]);
+	// 			alert("here");
+	// 		// System.out.println(point[0]);
+	// 		// System.out.println(point[1]);
+	// 	};
+
 
 	// document.body.innerHTML = contentsOfFileAsString;
 	lines = contentsOfFileAsString.split("\n");
@@ -66,8 +94,14 @@ function main()
 
 	for (var i = 0; i < lines.length; i++)
 	{
-		line = lines[i].split(" ");
-		neighborhoods[i] = new google.maps.LatLng(line[0], line[1]);
+		var string = lines[i].replace(/\t/gm, " ");
+		line = string.split(" ");
+		// alert();
+		if(i == 0)
+		{
+			neighborhoods.push (new google.maps.LatLng(line[0], line[1]));
+		}
+		neighborhoods.push( new google.maps.LatLng(line[2], line[3]) );
 	};
 }
 
@@ -104,14 +138,13 @@ function FileHelper()
 
 // main();
 
-var markers = [];
+var markers = new Array();
 var iterator = 0;
-
 var map;
 
 function initialize() {
 	var mapOptions = {
-zoom: 6,
+zoom: 4,
       center: berlin
 	};
 
@@ -120,6 +153,7 @@ zoom: 6,
 }
 
 function drop() {
+	// alert("hii");
 	drop1();
 	main();
 	for (var i = 0; i < neighborhoods.length; i++) {
@@ -131,14 +165,28 @@ function drop() {
 
 function addMarker() {
 
+	if(iterator == 0)
+	{
+		markers.push(new google.maps.Marker({
+		position: neighborhoods[iterator],
+		map: map,
+		draggable: false,
+		animation: google.maps.Animation.DROP,
+		icon: 'http://maps.google.com/mapfiles/ms/icons/arrow.png'
+		}));
+
+	}
+	else
+	{
 	markers.push(new google.maps.Marker({
-position: neighborhoods[iterator],
-map: map,
-draggable: false,
-animation: google.maps.Animation.BOUNCE,
-icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
-}));
-iterator++;
+	position: neighborhoods[iterator],
+	map: map,
+	draggable: false,
+	animation: google.maps.Animation.BOUNCE,
+	icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+	}));
+	}
+	iterator++;
 }
 
 /*
@@ -147,9 +195,9 @@ iterator++;
    ======================================================
  */
 
-var input = [];
-var iplines = [];
-var ipline = [];
+var input = new Array();
+var iplines ;
+var ipline ;
 
 
 function main1()
@@ -193,8 +241,8 @@ function main1()
 		// document.write(l[0]);
 
 		for (var i = 0; i < iplines.length; i++) {
-			ipline = iplines[i].split("\t");
-			input[i] = new google.maps.LatLng(ipline[0], ipline[1]);
+			ipline = iplines[i].split(" ");
+			input.push(new google.maps.LatLng(ipline[0], ipline[1]));
 		};
 	}
 }
@@ -205,7 +253,7 @@ function FileHelper1()
 }
 
 // main1();
-var mark = [];
+var mark = new Array();
 var iter = 0;
 
 function drop1() {
@@ -231,7 +279,7 @@ iter++;
 
 google.maps.event.addDomListener(window, 'load', initialize);
 
-window.onload=drop;
+window.onload = drop;
 
 </script>
 </head>
