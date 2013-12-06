@@ -1,0 +1,9 @@
+How to compile the code
+
+1. Create the folder jars in src folder and copy required dependent jars. 
+
+2. Use following commands to generate jar files. Run the following command inside the src folder.
+
+./make.sh [ KNN | RNN | KNNRTree | RNNRTree ]
+
+Jars will be crated in DistVector or RTree Folder.
